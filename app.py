@@ -1,16 +1,33 @@
 from flask import Flask, render_template, redirect, url_for, request, session, g, jsonify
+from flask_nav import Nav
+from flask_nav.elements import Navbar, View, Subgroup, Separator, Link
+from flask_bootstrap import Bootstrap
 from peewee import SqliteDatabase
 from database import User, Cards
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import bcrypt  # for hashing
 
 app = Flask(__name__)
+Bootstrap(app)
+nav = Nav()
+
 app.secret_key = 'SuperSecretKeyForAgileProject'
 db = SqliteDatabase('clicker.sqlite')
 # init for managing logins
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
+
+@nav.navigation()
+def mynavbar():
+    if current_user.is_authenticated:
+        return Navbar(
+            'Menu',
+            View('Home', 'home'),
+            View(f'Logout ({g.user.username})', 'logout'),
+            View('Profile', 'profile')
+        )
 
 
 @app.before_request
@@ -35,7 +52,7 @@ def close_connection(exception):
         db.close()
 
 
-@app.route('/')
+@app.route('/home', methods=['GET'])
 def home():
     return render_template('index.html')
 
@@ -79,6 +96,7 @@ def profile():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     """ Registers a new user and hashes password, also logs in after """
+    error = None
     if request.method == 'POST':
         username = request.form["new_username"]
         password = request.form["new_password"].encode("utf-8")
@@ -87,6 +105,8 @@ def register():
         session["user_id"] = User.get(User.username == newuser.username).id
         login_user(newuser)
         return redirect(url_for('profile'))
+    if request.method == 'GET':
+        return render_template('register.html', error=error)
 
 
 @app.route('/logout')
@@ -98,4 +118,5 @@ def logout():
 
 
 if __name__ == '__main__':
+    nav.init_app(app)
     app.run(debug=True)

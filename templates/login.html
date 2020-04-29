@@ -1,31 +1,32 @@
-<html>
-  <head>
-    <title>Flask Intro - login page</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  </head>
-  <body>
-    <div class="container">
-        <h1>Create an Account</h1>
-      <form action="/register" method="post">
-        <input type="text" placeholder="Username" name="new_username" value="">
-        <input type="password" placeholder="Password" name="new_password" value="">
-        <input type="submit" value="register">
-      </form>
-    </div>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>login page</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="../static/css/login.css">
+
+  
+</head>
+
+<body>
+  <section id="container">
+    <form action="/login" class="login" method="post">
+      <h1>Login:</h1>
+      <label for="username">Username:</label>
+      <input name="username" type="text" placeholder="username" class="form-control">
+      <label for="password">Password:</label>
+      <input name="password" type="password" placeholder="password" class="form-control">
+      <button type="submit" class="btn btn-primary btn-lg">Log in</button>
+    </form>
+
     <br>
-    <div class="container">
-      <h1>Please login</h1>
-      <br>
-      <form action="/login" method="post">
-        <input type="text" placeholder="Username" name="username" value="{{
-          request.form.username }}">
-         <input type="password" placeholder="Password" name="password" value="{{
-          request.form.password }}">
-        <input class="btn btn-default" type="submit" value="Login">
-      </form>
-      {% if error %}
-        <p class="error"><strong>Error:</strong> {{ error }}
-      {% endif %}
-    </div>
-  </body>
-</html>
+    <p>No account? <a href="http://127.0.0.1:5000/register">Register now!</a></p>
+</section>
+
+  
+
+
+</body>
