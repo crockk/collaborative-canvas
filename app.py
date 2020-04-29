@@ -25,8 +25,15 @@ def mynavbar():
         return Navbar(
             'Menu',
             View('Home', 'home'),
-            View(f'Logout ({g.user.username})', 'logout'),
-            View('Profile', 'profile')
+            View('Profile', 'profile'),
+            View(f'Logout ({g.user.username})', 'logout')
+        )
+    else:
+        return Navbar(
+            'Menu',
+            View('Home', 'home'),
+            View('Login', 'login'),
+            View('Register', 'register')
         )
 
 
@@ -57,6 +64,11 @@ def home():
     return render_template('index.html')
 
 
+@app.route('/', methods=['GET'])
+def default():
+    return render_template('index.html')
+
+
 @login_manager.user_loader
 def load_user(user_id):
     """ Required for managing user login """
@@ -66,12 +78,15 @@ def load_user(user_id):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """ Logs User in """
-    error = None
+    error = ''
     if request.method == 'POST':
         session.pop('user_id', None) # reset session
         username = request.form["username"]
         passwd = request.form["password"]
-        loginUser = User.get(User.username == username)
+        try:
+            loginUser = User.get(User.username == username)
+        except:
+            return render_template('login.html', error='A user with that username does not exist.')
         if loginUser and bcrypt.checkpw(passwd.encode("utf-8"), loginUser.password.encode("utf-8")):
             # If hashed passwwords match, then generate session and login user
             print(loginUser.password)
@@ -79,10 +94,10 @@ def login():
             login_user(loginUser)
             return redirect(url_for('profile'))
         else:
-            error = "Invalid Login Credentials"
-            return render_template('login.html', error=error)
+            error = "Invalid password."
+            return render_template('login.html', error='')
     else:
-        return render_template('login.html', error=error)
+        return render_template('login.html', error='')
 
 @app.route('/profile')
 @login_required
@@ -96,10 +111,12 @@ def profile():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     """ Registers a new user and hashes password, also logs in after """
-    error = None
+    error = ''
     if request.method == 'POST':
         username = request.form["new_username"]
         password = request.form["new_password"].encode("utf-8")
+        if User.select().where(User.username == username).exists():
+            return render_template('register.html', error='A user with that username already exists.')
         hashed = bcrypt.hashpw(password, bcrypt.gensalt())
         newuser = User.create(username=username, password=hashed)
         session["user_id"] = User.get(User.username == newuser.username).id
