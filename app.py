@@ -6,13 +6,14 @@ from peewee import SqliteDatabase
 from database import User, Cards
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import bcrypt  # for hashing
+import re
 
 app = Flask(__name__)
 Bootstrap(app)
 nav = Nav()
 
 app.secret_key = 'SuperSecretKeyForAgileProject'
-db = SqliteDatabase('clicker.sqlite')
+db = SqliteDatabase('pixr.sqlite')
 # init for managing logins
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -114,7 +115,25 @@ def register():
     error = ''
     if request.method == 'POST':
         username = request.form["new_username"]
-        password = request.form["new_password"].encode("utf-8")
+        password = request.form["new_password"]
+
+        reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{6,20}$"
+
+        # compiling regex
+        pat = re.compile(reg)
+        # searching regex
+        mat = re.search(pat, password)
+        # validating conditions
+        if mat:
+            password = request.form["new_password"].encode("utf-8")
+            print("Password is valid.")
+        else:
+
+            return render_template('register.html', error="Password is invalid: \n"
+                                                          "Must be 6-8 characters, \n"
+                                                          "contain one number, one uppercase letter, and "
+                                                          "one symbol")
+
         if User.select().where(User.username == username).exists():
             return render_template('register.html', error='A user with that username already exists.')
         hashed = bcrypt.hashpw(password, bcrypt.gensalt())
