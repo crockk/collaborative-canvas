@@ -1,7 +1,7 @@
 from peewee import SqliteDatabase, Model, CharField, IntegerField, ForeignKeyField
 from flask_login import UserMixin
 
-db = SqliteDatabase('clicker.sqlite')
+db = SqliteDatabase('pixr.sqlite')
 db.connect()
 
 
