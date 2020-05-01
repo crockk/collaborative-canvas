@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, session, g, jsonify
+from flask import Flask, render_template, make_response, redirect, url_for, request, session, g, jsonify
 from flask_nav import Nav
 from flask_nav.elements import Navbar, View, Subgroup, Separator, Link
 from flask_bootstrap import Bootstrap
@@ -62,12 +62,12 @@ def close_connection(exception):
 
 @app.route('/home', methods=['GET'])
 def home():
-    return render_template('index.html')
+    return make_response(render_template('index.html'), 200)
 
 
 @app.route('/', methods=['GET'])
 def default():
-    return render_template('index.html')
+    return make_response(render_template('index.html'), 200)
 
 
 @login_manager.user_loader
@@ -87,7 +87,7 @@ def login():
         try:
             loginUser = User.get(User.username == username)
         except:
-            return render_template('login.html', error='A user with that username does not exist.')
+            return make_response(render_template('login.html', error='A user with that username does not exist.'), 400)
         if loginUser and bcrypt.checkpw(passwd.encode("utf-8"), loginUser.password.encode("utf-8")):
             # If hashed passwwords match, then generate session and login user
             print(loginUser.password)
@@ -96,9 +96,9 @@ def login():
             return redirect(url_for('profile'))
         else:
             error = "Invalid password."
-            return render_template('login.html', error='')
+            return make_response(render_template('login.html', error=error), 400)
     else:
-        return render_template('login.html', error='')
+        return make_response(render_template('login.html', error=''), 200)
 
 @app.route('/profile')
 @login_required
@@ -106,7 +106,7 @@ def profile():
     """ Displays User Profile """
     if not g.user:  # Checks user stored in session (not sure this is actually needed anymore with login manager)
         return redirect(url_for('login', error="unauthorized"))
-    return render_template('profile.html')
+    return make_response(render_template('profile.html'), 200)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -129,20 +129,20 @@ def register():
             print("Password is valid.")
         else:
 
-            return render_template('register.html', error="Password is invalid: \n"
+            return make_response(render_template('register.html', error="Password is invalid: \n"
                                                           "Must be 6-8 characters, \n"
                                                           "contain one number, one uppercase letter, and "
-                                                          "one symbol")
+                                                          "one symbol"), 400)
 
         if User.select().where(User.username == username).exists():
-            return render_template('register.html', error='A user with that username already exists.')
+            return make_response(render_template('register.html', error='A user with that username already exists.'), 400)
         hashed = bcrypt.hashpw(password, bcrypt.gensalt())
         newuser = User.create(username=username, password=hashed)
         session["user_id"] = User.get(User.username == newuser.username).id
         login_user(newuser)
         return redirect(url_for('profile'))
     if request.method == 'GET':
-        return render_template('register.html', error=error)
+        return make_response(render_template('register.html', error=error), 200)
 
 
 @app.route('/logout')

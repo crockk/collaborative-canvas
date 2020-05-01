@@ -12,7 +12,8 @@ class TestApi(unittest.TestCase):
     def setUp(self) -> None:
         drop()
         create()
-        user = User.create(username='test', password='password')
+        user = {'new_username':'test', 'new_password':'P@ssw0rd'}
+        requests.post(API_URL + '/register', user)
 
     def test_default(self):
         r = requests.get(API_URL + '/')
@@ -22,11 +23,30 @@ class TestApi(unittest.TestCase):
         r = requests.get(API_URL + '/home')
         self.assertEqual(r.status_code, 200)
 
+    def test_login(self):
+        r = requests.get(API_URL + '/login')
+        self.assertEqual(r.status_code, 200)
+
+        data = {'username':'test', 'password':'P@ssw0rd'}
+        r = requests.post(API_URL + '/login', data)
+        self.assertEqual(r.status_code, 200)
+
+        data = {'username':'test', 'password':'wrong_password'}
+        r = requests.post(API_URL + '/login', data)
+        self.assertEqual(r.status_code, 400)
+
+        data = {'username':'doesnot', 'password':'exist'}
+        r = requests.post(API_URL + '/login', data)
+        self.assertEqual(r.status_code, 400)
+
     def test_profile(self):
         pass
 
-    def test_login(self):
-        r = requests.get(API_URL + '/login')
+    def test_register(self):
+        pass
+
+    def test_logout(self):
+        pass
 
 
 if __name__ == '__main__':
