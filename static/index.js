@@ -19,7 +19,7 @@ $(document).ready(function(){
     }
     
     const cells = document.querySelectorAll('.cell');
-    for (var i = 0; i < cells.length; i++) {
+    for (i = 0; i < cells.length; i++) {
         cells[i].addEventListener('click', function (event) {    
         const color = "black";
         event.target.style.backgroundColor = color;

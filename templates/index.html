@@ -4,7 +4,26 @@
 <head>
   <title>main page</title>
   <meta charset="utf-8">
+  
   <link rel="stylesheet" href="../static/css/index.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  
+  <style>
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
+
+    table{
+      
+	    width: 800px;
+  
+    }
+    
+    td{
+      height: 20px;
+    }
+  </style>
 </head>
 
 <body>
@@ -27,8 +46,14 @@
     <section id="container_canvas">
         
         <h1>Canvas</h1>
-        <canvas id="myCanvas"></canvas>
+        <table id="myCanvas">
+
+        </table>
     </section>
+    
+    <script type="text/javascript" src="{{ url_for('static', filename='index.js') }}"></script>
     {% endblock %}
+    
+    
 
 </body>
