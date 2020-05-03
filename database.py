@@ -16,6 +16,18 @@ class User(UserMixin, Model):
         database = db
 
 
+class Pixels(Model):
+    """ Peewee model for the canvas """
+    user = ForeignKeyField(User)
+    pixel = CharField(unique=True)
+    color = CharField()
+
+    class Meta:
+        database = db
+
+    def __str__(self): return self.user
+
+
 class Cards(Model):
     """ Peewee model for Hero Unit """
     card_name = CharField(unique=True)
@@ -26,8 +38,9 @@ class Cards(Model):
 
     def __str__(self): return self.card_name
 
+
 if __name__ == "__main__":
-    db.drop_tables([User, Cards])
-    db.create_tables([User, Cards])
+    db.drop_tables([User, Cards, Pixels])
+    db.create_tables([User, Cards, Pixels])
     user = User.create(username='test', password='password')
 
