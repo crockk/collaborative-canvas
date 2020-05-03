@@ -7,6 +7,7 @@ from database import User, Cards, Pixels
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import bcrypt  # for hashing
 import re
+import json
 
 
 app = Flask(__name__)
