@@ -21,15 +21,3 @@ $(document).ready(function(){
         });
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-
