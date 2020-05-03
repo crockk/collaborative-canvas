@@ -23,7 +23,26 @@
     td{
       height: 20px;
     }
+
+    
   </style>
+
+  <script type="text/javascript">
+    
+    function id_color_array() {
+        let id_color_cell=[];
+        const cells = document.querySelectorAll('.cell');
+        for (i = 0; i < cells.length; i++) {
+          if (cells[i].style.backgroundColor !==""){
+            id_color_cell.push(["p"+i,cells[i].style.backgroundColor])
+
+          }
+            
+
+        }
+        document.getElementById("demo").innerHTML =id_color_cell;
+    }
+  </script>
 </head>
 
 <body>
@@ -50,6 +69,9 @@
 
         </table>
     </section>
+
+    <p id="demo">result here</p>
+    <button type="button" onclick="id_color_array()">save</button>
     
     <script type="text/javascript" src="{{ url_for('static', filename='index.js') }}"></script>
     {% endblock %}
