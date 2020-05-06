@@ -2,11 +2,13 @@ from flask import Flask, render_template, make_response, redirect, url_for, requ
 from flask_nav import Nav
 from flask_nav.elements import Navbar, View, Subgroup, Separator, Link
 from flask_bootstrap import Bootstrap
-from peewee import SqliteDatabase
-from database import User, Cards
+from peewee import SqliteDatabase, IntegrityError
+from database import User, Cards, Pixels
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import bcrypt  # for hashing
 import re
+import json
+
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -116,6 +118,11 @@ def register():
     if request.method == 'POST':
         username = request.form["new_username"]
         password = request.form["new_password"]
+        v_password = request.form["v_password"]
+
+        # Verify password is typed correctly
+        if v_password != password:
+            return render_template('register.html', error='Passwords do not match')
 
         reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{6,20}$"
 
@@ -151,6 +158,31 @@ def logout():
     """ Logs user out when called """
     logout_user()
     return redirect(url_for('login'))
+
+
+# ---------------------------------------- Main Canvas API ---------------------------------------------
+@app.route('/canvas/<user>', methods=['POST'])
+def store_pixels(user):
+    """ Stores the pixel ids and their colors """
+    # JSON data structure = { pixel1 : color, pixel2 : color ...... }
+    data = request.json
+
+    for pixel in data:
+        try:
+            pixel = (Pixels.replace(user=user, pixel=pixel, color=data[pixel]).execute())
+        except IntegrityError as e:
+            return make_response(str(e), 400)
+    return make_response("Saved", 200)
+
+
+@app.route('/canvas/<user>', methods=['GET'])
+def get_pixels(user):
+    dict = {}
+    data = Pixels.select().where(Pixels.user_id == user).execute()
+    for i in data:
+        dict[i.pixel] = i.color
+
+    return jsonify(dict)
 
 
 if __name__ == '__main__':
