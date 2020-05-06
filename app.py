@@ -116,6 +116,11 @@ def register():
     if request.method == 'POST':
         username = request.form["new_username"]
         password = request.form["new_password"]
+        v_password = request.form["v_password"]
+
+        # Verify password is typed correctly
+        if v_password != password:
+            return render_template('register.html', error='Passwords do not match')
 
         reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{6,20}$"
 
