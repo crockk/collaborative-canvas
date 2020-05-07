@@ -90,24 +90,25 @@ def login():
             loginUser = User.get(User.username == username)
         except:
             return make_response(render_template('login.html', error='A user with that username does not exist.'), 400)
-        if loginUser and bcrypt.checkpw(passwd.encode("utf-8"), loginUser.password.encode("utf-8")):
-            # If hashed passwwords match, then generate session and login user
-            print(loginUser.password)
-            session["user_id"] = User.get(User.username == username).id
-            login_user(loginUser)
-            return redirect(url_for('profile'))
-        else:
+        try:
+            if loginUser and bcrypt.checkpw(passwd.encode("utf-8"), loginUser.password.encode("utf-8")):
+                # If hashed passwords match, then generate session and login user
+                print(loginUser.password)
+                session["user_id"] = User.get(User.username == username).id
+                login_user(loginUser)
+                return make_response(redirect(url_for('profile')), 400)
+        except ValueError:
             error = "Invalid password."
             return make_response(render_template('login.html', error=error), 400)
     else:
         return make_response(render_template('login.html', error=''), 200)
 
 @app.route('/profile')
-@login_required
+#@login_required
 def profile():
     """ Displays User Profile """
-    if not g.user:  # Checks user stored in session (not sure this is actually needed anymore with login manager)
-        return redirect(url_for('login', error="unauthorized"))
+    #if not g.user:  # Checks user stored in session (not sure this is actually needed anymore with login manager)
+        #return redirect(url_for('login', error="unauthorized"))
     return make_response(render_template('profile.html'), 200)
 
 
@@ -147,7 +148,7 @@ def register():
         newuser = User.create(username=username, password=hashed)
         session["user_id"] = User.get(User.username == newuser.username).id
         login_user(newuser)
-        return redirect(url_for('profile'))
+        return make_response(render_template('profile.html'), 200)
     if request.method == 'GET':
         return make_response(render_template('register.html', error=error), 200)
 
@@ -157,13 +158,13 @@ def register():
 def logout():
     """ Logs user out when called """
     logout_user()
-    return redirect(url_for('login'))
+    return make_response(redirect(url_for('login')), 200)
 
 
 # ---------------------------------------- Main Canvas API ---------------------------------------------
 @app.route('/canvas/<user>', methods=['POST'])
 def store_pixels(user):
-    """ Stores the pixel ids and their colors """
+    # Stores the pixel ids and their colors
     # JSON data structure = { pixel1 : color, pixel2 : color ...... }
     data = request.json
 
