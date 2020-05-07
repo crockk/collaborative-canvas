@@ -45,7 +45,7 @@ class TestApi(unittest.TestCase):
 
     def test_register(self):
         user = User.create(username='test', password='password')
-        data = {'new_username':'newuser', 'new_password':'P@ssw0rd'}
+        data = {'new_username':'newuser', 'new_password':'P@ssw0rd', 'v_password':'P@ssw0rd'}
         data2 = {'new_username':'newuser', 'new_password':'password'}
         data3 = {'new_username': 'test', 'new_password': 'P@ssw0rd'}
         with t_app.test_client() as c:

@@ -119,6 +119,11 @@ def register():
     if request.method == 'POST':
         username = request.form["new_username"]
         password = request.form["new_password"]
+        v_password = request.form["v_password"]
+
+        # Verify password is typed correctly
+        if v_password != password:
+            return render_template('register.html', error='Passwords do not match')
 
         reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{6,20}$"
 
@@ -143,7 +148,7 @@ def register():
         newuser = User.create(username=username, password=hashed)
         session["user_id"] = User.get(User.username == newuser.username).id
         login_user(newuser)
-        return make_response(redirect(url_for('profile')), 200)
+        return make_response(render_template('profile.html'), 200)
     if request.method == 'GET':
         return make_response(render_template('register.html', error=error), 200)
 
