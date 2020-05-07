@@ -11,6 +11,22 @@
   align-items: center;
 }
 
+.navbar{
+  display: flex;
+  justify-content: center;
+}
+
+.navbar-nav{
+  display: flex;
+  flex-direction: row;
+  flex-basis: 50vw;
+  justify-content: space-around;
+
+
+}
+
+
+
 table, th, td {
   border: 1px solid black;
   border-collapse: collapse;
@@ -26,3 +42,5 @@ td{
   
   height: 20px;
 }
+
+
