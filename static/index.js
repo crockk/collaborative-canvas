@@ -27,15 +27,3 @@ $(document).ready(function(){
 function setCellColor(cell, color) {
     cell.style.backgroundColor = color;
 }
-
-
-
-
-
-
-
-
-
-
-
-
