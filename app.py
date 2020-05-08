@@ -49,10 +49,12 @@ def get_db():
 @app.before_request
 def before_request():
     """ For sessions """
-    g.user = None
+    g.user = {}
     if 'user_id' in session:
         user = User.get(User.id == session['user_id'])
         g.user = user
+    else:
+        g.user['username'] = ''
 
 
 @app.teardown_request
@@ -102,7 +104,6 @@ def login():
             return make_response(render_template('login.html', error=error), 400)
     else:
         return make_response(render_template('login.html', error=''), 200)
-
 
 @app.route('/profile')
 #@login_required
@@ -159,6 +160,7 @@ def register():
 def logout():
     """ Logs user out when called """
     logout_user()
+    session.pop('user_id', None)  # reset session
     return make_response(redirect(url_for('login')), 302)
 
 
