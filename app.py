@@ -96,7 +96,7 @@ def login():
                 print(loginUser.password)
                 session["user_id"] = User.get(User.username == username).id
                 login_user(loginUser)
-                return make_response(render_template('profile.html'), 400)
+                return make_response(redirect(url_for('profile')), 400)
         except ValueError:
             error = "Invalid password."
             return make_response(render_template('login.html', error=error), 400)
@@ -158,7 +158,7 @@ def register():
 def logout():
     """ Logs user out when called """
     logout_user()
-    return make_response(render_template('index.html'), 200)
+    return make_response(redirect(url_for('login')), 200)
 
 
 # ---------------------------------------- Main Canvas API ---------------------------------------------
