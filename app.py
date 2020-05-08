@@ -150,7 +150,7 @@ def register():
         newuser = User.create(username=username, password=hashed)
         session["user_id"] = User.get(User.username == newuser.username).id
         login_user(newuser)
-        return make_response(render_template('profile.html'), 200)
+        return make_response(redirect(url_for('profile')), 302)
     if request.method == 'GET':
         return make_response(render_template('register.html', error=error), 200)
 
