@@ -12,15 +12,21 @@ $(document).ready(function(){
         $('tr').append("<td class='cell' id='p"+id+"'></td>");
         id++;
     }
-    
-    const cells = document.querySelectorAll('.cell');
-    for (i = 0; i < cells.length; i++) {
-        cells[i].addEventListener('click', function (event) {    
-        const color = "black";
-        event.target.style.backgroundColor = color;
-        });
-    }
+
+    document.getElementById("myCanvas").addEventListener('mousedown', e => {
+
+        if (!e.target.matches('td')) {
+            e.stopPropagation();
+        }
+        setCellColor(e.target, "black");
+
+    });
+
 });
+
+function setCellColor(cell, color) {
+    cell.style.backgroundColor = color;
+}
 
 
 
