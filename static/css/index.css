@@ -32,14 +32,8 @@ table, th, td {
   border-collapse: collapse;
 }
 
-table{
-  
-	width: 800px;
-  
-}
-
 td{
-  
+  width: 20px;
   height: 20px;
 }
 
