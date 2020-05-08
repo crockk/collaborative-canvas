@@ -49,10 +49,12 @@ def get_db():
 @app.before_request
 def before_request():
     """ For sessions """
-    g.user = None
+    g.user = {}
     if 'user_id' in session:
         user = User.get(User.id == session['user_id'])
         g.user = user
+    else:
+        g.user['username'] = ''
 
 
 @app.teardown_request
@@ -96,7 +98,7 @@ def login():
                 print(loginUser.password)
                 session["user_id"] = User.get(User.username == username).id
                 login_user(loginUser)
-                return make_response(redirect(url_for('profile')), 400)
+                return make_response(render_template('profile.html'), 302)
         except ValueError:
             error = "Invalid password."
             return make_response(render_template('login.html', error=error), 400)
@@ -158,7 +160,8 @@ def register():
 def logout():
     """ Logs user out when called """
     logout_user()
-    return make_response(redirect(url_for('login')), 200)
+    session.pop('user_id', None)  # reset session
+    return make_response(redirect(url_for('login')), 302)
 
 
 # ---------------------------------------- Main Canvas API ---------------------------------------------
