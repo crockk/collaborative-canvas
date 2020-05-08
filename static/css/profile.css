@@ -1,12 +1,26 @@
 
-
 #container_canvas{
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  
 }
+
+.navbar{
+  display: flex;
+  justify-content: center;
+}
+
+.navbar-nav{
+  display: flex;
+  flex-direction: row;
+  flex-basis: 50vw;
+  justify-content: space-around;
+
+
+}
+
+
 
 table, th, td {
   border: 1px solid black;

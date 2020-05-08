@@ -1,73 +1,62 @@
 import unittest
-import requests
-from create_tables import create
+from app import app
 from drop_tables import drop
+from create_tables import create
+from database import User
+from flask import jsonify
 
-API_URL = "http://127.0.0.1:5000"
-
+t_app = app
+t_app.config["TESTING"] = True
 
 class TestApi(unittest.TestCase):
 
     def setUp(self) -> None:
         drop()
         create()
-        user = {'new_username':'test', 'new_password':'P@ssw0rd'}
-        requests.post(API_URL + '/register', user)
-
-        self.user = {'username':'test', 'password':'P@ssw0rd'}
 
     def test_default(self):
-        r = requests.get(API_URL + '/')
-        self.assertEqual(r.status_code, 200)
+        with t_app.test_client() as c:
+            resp = c.get('/')
+            self.assertEqual(resp.status_code, 200)
 
     def test_home(self):
-        r = requests.get(API_URL + '/home')
-        self.assertEqual(r.status_code, 200)
+        with t_app.test_client() as c:
+            resp = c.get('/home')
+            self.assertEqual(resp.status_code, 200)
+
+    def test_profile(self):
+        with t_app.test_client() as c:
+            resp = c.get('/profile')
+            self.assertEqual(resp.status_code, 200)
 
     def test_login(self):
-        r = requests.get(API_URL + '/login')
-        self.assertEqual(r.status_code, 200)
-
-        data = {'username':'test', 'password':'P@ssw0rd'}
-        r = requests.post(API_URL + '/login', data)
-        self.assertEqual(r.status_code, 200)
-
-        data = {'username':'test', 'password':'wrong_password'}
-        r = requests.post(API_URL + '/login', data)
-        self.assertEqual(r.status_code, 400)
-
-        data = {'username':'doesnot', 'password':'exist'}
-        r = requests.post(API_URL + '/login', data)
-        self.assertEqual(r.status_code, 400)
-
-    def test_profile(self, ):
-        r = requests.get(API_URL + '/profile')
-        self.assertEqual(r.status_code, 200)
-
-        requests.post(API_URL + '/login', self.user)
-
-        r = requests.get(API_URL + '/profile')
-        self.assertEqual(r.status_code, 200)
+        user = User.create(username='test', password='password')
+        data2 = {'username': 'new_user', 'password': 'P@ssw0rd'}
+        data3 = {'username': 'test', 'password': 'password'}
+        with t_app.test_client() as c:
+            resp = c.post('/login')
+            self.assertEqual(resp.status_code, 400)
+            resp = c.post('/login', data=data2)
+            self.assertEqual(resp.status_code, 400)
+            resp = c.post('/login', data=data3)
+            self.assertRaises(ValueError)
+            resp = c.get('/login')
+            self.assertEqual(resp.status_code, 200)
 
     def test_register(self):
-        r = requests.get(API_URL + '/register')
-        self.assertEqual(r.status_code, 200)
-
-        new_user = {'new_username': 'jimmy', 'new_password':'P@ssw0rd'}
-        r = requests.post(API_URL + '/register', new_user)
-        self.assertEqual(r.status_code, 200)
-
-        new_user = {'new_username': 'test', 'new_password':'P@ssw0rd'}
-        r = requests.post(API_URL + '/register', new_user)
-        self.assertEqual(r.status_code, 400)
-
-        new_user = {'new_username': 'jimmy', 'new_password':'bad'}
-        r = requests.post(API_URL + '/register', new_user)
-        self.assertEqual(r.status_code, 400)
-
-    def test_logout(self):
-        r = requests.get(API_URL + '/logout')
-        self.assertEqual(r.status_code, 200)
+        user = User.create(username='test', password='password')
+        data = {'new_username':'newuser', 'new_password':'P@ssw0rd', 'v_password':'P@ssw0rd'}
+        data2 = {'new_username':'newuser', 'new_password':'password'}
+        data3 = {'new_username': 'test', 'new_password': 'P@ssw0rd'}
+        with t_app.test_client() as c:
+            resp = c.post('/register', data=data)
+            self.assertEqual(resp.status_code, 200)
+            resp = c.post('/register', data=data2)
+            self.assertEqual(resp.status_code, 400)
+            resp = c.post('/register', data=data3)
+            self.assertEqual(resp.status_code, 400)
+            resp = c.get('/register')
+            self.assertEqual(resp.status_code, 200)
 
 
 if __name__ == '__main__':
