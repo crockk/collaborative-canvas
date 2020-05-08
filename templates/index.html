@@ -4,31 +4,82 @@
 <head>
   <title>main page</title>
   <meta charset="utf-8">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   <link rel="stylesheet" href="../static/css/index.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  
+  
+
+  <script type="text/javascript">
+    
+    function id_color_array() {
+        let pixels={};
+        const cells = document.querySelectorAll('.cell');
+        for (i = 0; i < cells.length; i++) {
+          cells[i].id="p"+i;
+          if (cells[i].style.backgroundColor != ""){
+            //id_color_cell.push(["p"+i,cells[i].style.backgroundColor])
+            pixels['p'+i] = cells[i].style.backgroundColor;
+          }
+        }
+        const data = JSON.stringify(pixels);
+        const xhr = new XMLHttpRequest();
+
+        xhr.open("POST", "/canvas/home");
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.send(data);
+
+        document.getElementById("demo").innerHTML = pixels;
+    }
+
+    function load(){
+      let pixels={};
+      const cells = document.querySelectorAll('.cell');
+      for (i = 0; i < cells.length; i++) {
+        cells[i].id="p"+i;                          // setting IDs for the cells
+      }
+      let data;
+
+      const xhr = new XMLHttpRequest();
+      xhr.open("GET", "/canvas/home", true);        // making GET request
+      xhr.send();
+
+      xhr.onload = function(){
+        data = JSON.parse(xhr.responseText);
+        let keys = Object.keys(data);
+        for (let i=0; i < keys.length; i++){
+          let color = data[keys[i]];                // changing the color with the data received
+          document.getElementById(keys[i]).style.backgroundColor = color;
+        }
+      }
+    }
+  </script>
 </head>
 
 <body>
-<!--    <section id="container_nav">-->
-<!--        <nav class="navbar">-->
-<!--            <ul class="navbar-nav">-->
-<!--                <li><a href="http://127.0.0.1:5000/home">Home</a></li>-->
-<!--                <li><a href="http://127.0.0.1:5000/profile">Profile</a></li>-->
-<!--                <li><a href="http://127.0.0.1:5000/login">Login</a></li>-->
-<!--            </ul>-->
-<!--        </nav>-->
-<!--        -->
-<!--    </section>-->
-    {% extends "bootstrap/base.html" %}
-    {% block navbar %}
-    {{ nav.mynavbar.render() }}
-    {% endblock %}
 
-    {% block content %}
+    <section id="container_nav">
+       <nav class="navbar">
+           <ul class="navbar-nav">
+               <li><a href="http://127.0.0.1:5000/home">Home</a></li>
+               <li><a href="http://127.0.0.1:5000/register">Signup</a></li>
+               <li><a href="http://127.0.0.1:5000/login">Login</a></li>
+           </ul>
+       </nav>
+    </section>
+
     <section id="container_canvas">
         
         <h1>Canvas</h1>
-        <canvas id="myCanvas"></canvas>
+        <table id="myCanvas">
+
+        </table>
     </section>
-    {% endblock %}
+
+    <button type="button" onclick="id_color_array()">save</button>
+    
+    <script type="text/javascript" src="{{ url_for('static', filename='index.js') }}"></script>
+    
+    
 
 </body>
