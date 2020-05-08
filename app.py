@@ -103,6 +103,7 @@ def login():
     else:
         return make_response(render_template('login.html', error=''), 200)
 
+
 @app.route('/profile')
 #@login_required
 def profile():
