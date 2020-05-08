@@ -16,24 +16,21 @@
   flex-direction: row;
   flex-basis: 50vw;
   justify-content: space-around;
-
-
 }
 
-
+.navbar-nav * {
+  width: 120px;
+  text-align: center;
+}
 
 table, th, td {
   border: 1px solid black;
   border-collapse: collapse;
 }
 
-table{
-  
-	width: 800px;
-  
-}
-
 td{
-  
+  width: 20px;
   height: 20px;
 }
+
+
