@@ -185,6 +185,13 @@ def get_pixels(user):
     return jsonify(dict)
 
 
+# ---------------------------------------- Profile Canvas API ---------------------------------------------
+@app.route('/username', methods=['GET'])
+def get_username():
+    name = g.user.username
+    return name
+
+
 if __name__ == '__main__':
     nav.init_app(app)
     app.run(debug=True)

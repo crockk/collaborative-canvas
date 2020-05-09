@@ -27,7 +27,14 @@
     </style>
 
     <script type="text/javascript">
-    
+      
+      let user;
+
+      const xhr1 = new XMLHttpRequest();
+      xhr1.open("GET", "/username", false);        // getting the username
+      xhr1.send(null);
+      user = xhr1.responseText;
+
         function id_color_array() {
             let pixels={};
             const cells = document.querySelectorAll('.cell');
@@ -41,7 +48,7 @@
             const data = JSON.stringify(pixels);
             const xhr = new XMLHttpRequest();
     
-            xhr.open("POST", "/canvas/home");
+            xhr.open("POST", "/canvas/"+user);
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.send(data);
     
@@ -59,7 +66,7 @@
           let data;
     
           const xhr = new XMLHttpRequest();
-          xhr.open("GET", "/canvas/home", true);        // making GET request
+          xhr.open("GET", "/canvas/"+user, true);        // making GET request for that user
           xhr.send();
     
           xhr.onload = function(){
@@ -89,7 +96,7 @@
         </table>
     </section>
 
-    <!-- <button type="button" onclick="id_color_array()">save</button> -->
+    <button type="button" onclick="id_color_array()">save</button>
     
     <script type="text/javascript" src="{{ url_for('static', filename='profile.js') }}"></script>
     {% endblock %}
