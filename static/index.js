@@ -16,7 +16,7 @@ $(document).ready(function(){
     document.getElementById("myCanvas").addEventListener('mousedown', e => {
 
         if (!e.target.matches('td')) {
-            e.stopPropagation();
+            return false;
         }
         setCellColor(e.target, "black");
 
