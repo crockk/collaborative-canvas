@@ -1,11 +1,26 @@
 
-
 #container_canvas{
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  
+}
+
+.navbar{
+  display: flex;
+  justify-content: center;
+}
+
+.navbar-nav{
+  display: flex;
+  flex-direction: row;
+  flex-basis: 50vw;
+  justify-content: space-around;
+}
+
+.navbar-nav * {
+  width: 120px;
+  text-align: center;
 }
 
 table, th, td {
@@ -13,13 +28,9 @@ table, th, td {
   border-collapse: collapse;
 }
 
-table{
-  
-	width: 800px;
-  
-}
-
 td{
-  
+  width: 20px;
   height: 20px;
 }
+
+
