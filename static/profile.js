@@ -22,6 +22,11 @@ $(document).ready(function(){
 
     });
 
+    //erase with double click
+    $('td').dblclick(function(){
+        setCellColor(this, "white");
+    });
+
 });
 
 function setCellColor(cell, color) {
