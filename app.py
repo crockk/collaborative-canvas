@@ -98,7 +98,7 @@ def login():
                 print(loginUser.password)
                 session["user_id"] = User.get(User.username == username).id
                 login_user(loginUser)
-                return make_response(redirect(url_for('profile')), 302)
+                return make_response(redirect(url_for('profile',username=username)), 302)
         except ValueError:
             error = "Invalid password."
             return make_response(render_template('login.html', error=error), 400)
@@ -111,8 +111,14 @@ def profile():
     """ Displays User Profile """
     #if not g.user:  # Checks user stored in session (not sure this is actually needed anymore with login manager)
         #return redirect(url_for('login', error="unauthorized"))
-    return make_response(render_template('profile.html'), 200)
+    # return make_response(render_template('profile.html'), 200)
+    # return redirect(url_for('profile',username=g.user.username))
+    return render_template("profile.html",username=g.user.username)
 
+@app.route('/profile/<username>')
+#@login_required
+def userprofile(username):
+    return render_template("profile.html",username=username)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -150,7 +156,7 @@ def register():
         newuser = User.create(username=username, password=hashed)
         session["user_id"] = User.get(User.username == newuser.username).id
         login_user(newuser)
-        return make_response(redirect(url_for('profile')), 302)
+        return make_response(redirect(url_for('profile',username=username)), 302)
     if request.method == 'GET':
         return make_response(render_template('register.html', error=error), 200)
 

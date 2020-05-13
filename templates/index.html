@@ -61,13 +61,13 @@
     <section id="container_nav">
        <nav class="navbar">
            <ul class="navbar-nav">
-               <li><a href="http://127.0.0.1:5000/home">Home</a></li>
+               <li><a href="{{url_for('home')}}">Home</a></li>
                {% if (g.user.username != '') %}
-               <li><a href="http://127.0.0.1:5000/profile">Profile</a></li>
-               <li><a href="http://127.0.0.1:5000/logout">Logout ({{g.user.username}})</a></li>
+               <li><a href="{{url_for('profile',username=username)}}">Profile</a></li>
+               <li><a href="{{url_for('logout')}}">Logout ({{g.user.username}})</a></li>
                {% else %}
-               <li><a href="http://127.0.0.1:5000/register">Signup</a></li>
-               <li><a href="http://127.0.0.1:5000/login">Login</a></li>
+               <li><a href="{{url_for('register')}}">Signup</a></li>
+               <li><a href="{{url_for('login')}}">Login</a></li>
                {% endif %}
            </ul>
        </nav>
