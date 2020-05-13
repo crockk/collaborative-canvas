@@ -50,7 +50,7 @@ class TestApi(unittest.TestCase):
         data3 = {'new_username': 'test', 'new_password': 'P@ssw0rd'}
         with t_app.test_client() as c:
             resp = c.post('/register', data=data)
-            self.assertEqual(resp.status_code, 200)
+            self.assertEqual(resp.status_code, 302)
             resp = c.post('/register', data=data2)
             self.assertEqual(resp.status_code, 400)
             resp = c.post('/register', data=data3)
