@@ -13,6 +13,7 @@ $(document).ready(function(){
         id++;
     }
 
+    // draw on canvas
     document.getElementById("myCanvas").addEventListener('mousedown', e => {
 
         if (!e.target.matches('td')) {
@@ -20,6 +21,11 @@ $(document).ready(function(){
         }
         setCellColor(e.target, "black");
 
+    });
+
+    //erase with double click
+    $('td').dblclick(function(){
+        setCellColor(this, "white");
     });
 
 });
