@@ -29,6 +29,7 @@
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.send(data);
 
+<<<<<<< HEAD
         document.getElementById("demo").innerHTML = pixels;
     }
 
@@ -50,6 +51,59 @@
         for (let i=0; i < keys.length; i++){
           let color = data[keys[i]];                // changing the color with the data received
           document.getElementById(keys[i]).style.backgroundColor = color;
+=======
+    <script type="text/javascript">
+      
+      let user;
+
+      const xhr1 = new XMLHttpRequest();
+      xhr1.open("GET", "/username", false);        // getting the username
+      xhr1.send(null);
+      user = xhr1.responseText;
+
+        function id_color_array() {
+            let pixels={};
+            const cells = document.querySelectorAll('.cell');
+            for (i = 0; i < cells.length; i++) {
+              cells[i].id="p"+i;
+              if (cells[i].style.backgroundColor != ""){
+                //id_color_cell.push(["p"+i,cells[i].style.backgroundColor])
+                pixels['p'+i] = cells[i].style.backgroundColor;
+              }
+            }
+            const data = JSON.stringify(pixels);
+            const xhr = new XMLHttpRequest();
+    
+            xhr.open("POST", "/canvas/"+user);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.send(data);
+    
+            document.getElementById("demo").innerHTML = pixels;
+        }
+        
+
+        // need to alter here
+        function load(){
+          let pixels={};
+          const cells = document.querySelectorAll('.cell');
+          for (i = 0; i < cells.length; i++) {
+            cells[i].id="p"+i;                          // setting IDs for the cells
+          }
+          let data;
+    
+          const xhr = new XMLHttpRequest();
+          xhr.open("GET", "/canvas/"+user, true);        // making GET request for that user
+          xhr.send();
+    
+          xhr.onload = function(){
+            data = JSON.parse(xhr.responseText);
+            let keys = Object.keys(data);
+            for (let i=0; i < keys.length; i++){
+              let color = data[keys[i]];                // changing the color with the data received
+              document.getElementById(keys[i]).style.backgroundColor = color;
+            }
+          }
+>>>>>>> 77008a923fa33962b71fd7f76b3a94d208e5ab2d
         }
       }
     }
@@ -77,6 +131,10 @@
 
         </table>
     </section>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 77008a923fa33962b71fd7f76b3a94d208e5ab2d
     <button type="button" onclick="id_color_array()">save</button>
     
     <script type="text/javascript" src="{{ url_for('static', filename='profile.js') }}"></script>
