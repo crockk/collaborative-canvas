@@ -113,12 +113,12 @@ def profile():
         #return redirect(url_for('login', error="unauthorized"))
     # return make_response(render_template('profile.html'), 200)
     # return redirect(url_for('profile',username=g.user.username))
-    return render_template("profile.html",username=g.user.username)
+    return render_template("profile.html", username=g.user.username)
 
 @app.route('/profile/<username>')
 #@login_required
 def userprofile(username):
-    return render_template("profile.html",username=username)
+    return render_template("profile.html", username=username.title())
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -176,6 +176,8 @@ def store_pixels(user):
     # Stores the pixel ids and their colors
     # JSON data structure = { pixel1 : color, pixel2 : color ...... }
     data = request.json
+    old_pixels = Pixels.delete().where(Pixels.user == user)
+    old_pixels.execute()
 
     for pixel in data:
         try:
