@@ -59,8 +59,13 @@
     <section id="container_nav">
         <nav class="navbar">
             <ul class="navbar-nav">
-                <li><a href="{{url_for('home')}}">Home</a></li>
-                <li><a href="{{url_for('logout')}}">Logout ({{ g.user.username }})</a></li>
+               <li><a href="{{url_for('home')}}">Home</a></li>
+               {% if (g.user.username != '') %}
+               <li><a href="{{url_for('logout')}}">Logout ({{g.user.username}})</a></li>
+               {% else %}
+               <li><a href="{{url_for('register')}}">Signup</a></li>
+               <li><a href="{{url_for('login')}}">Login</a></li>
+               {% endif %}
             </ul>
         </nav>
      </section>
