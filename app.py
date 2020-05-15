@@ -16,7 +16,6 @@ nav = Nav()
 
 app.secret_key = 'SuperSecretKeyForAgileProject'
 db = SqliteDatabase('pixr.sqlite')
-db.connect()
 if not db.table_exists(User) or not db.table_exists(Pixels):
     db.drop_tables([User, Cards, Pixels])
     db.create_tables([User, Cards, Pixels])
