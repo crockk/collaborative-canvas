@@ -7,76 +7,77 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
   <link rel="stylesheet" href="../static/css/index.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  
-  
-
-  <script type="text/javascript">
-    
-    function id_color_array() {
-        let pixels={};
-        const cells = document.querySelectorAll('.cell');
-        for (i = 0; i < cells.length; i++) {
-          cells[i].id="p"+i;
-          if (cells[i].style.backgroundColor != ""){
-            //id_color_cell.push(["p"+i,cells[i].style.backgroundColor])
-            pixels['p'+i] = cells[i].style.backgroundColor;
-          }
-        }
-        const data = JSON.stringify(pixels);
-        const xhr = new XMLHttpRequest();
-
-        xhr.open("POST", "/canvas/home");
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.send(data);
-
-        document.getElementById("demo").innerHTML = pixels;
-    }
-
-    function load(){
-      let pixels={};
-      const cells = document.querySelectorAll('.cell');
-      for (i = 0; i < cells.length; i++) {
-        cells[i].id="p"+i;                          // setting IDs for the cells
-      }
-      let data;
-
-      const xhr = new XMLHttpRequest();
-      xhr.open("GET", "/canvas/home", true);        // making GET request
-      xhr.send();
-
-      xhr.onload = function(){
-        data = JSON.parse(xhr.responseText);
-        let keys = Object.keys(data);
-        for (let i=0; i < keys.length; i++){
-          let color = data[keys[i]];                // changing the color with the data received
-          document.getElementById(keys[i]).style.backgroundColor = color;
-        }
-      }
-    }
-
-    if (g.user.username == ''){
-        location.reload()
-    }
-  </script>
 </head>
 
-<body>
+<script type="text/javascript">
+
+  function id_color_array() {
+    let pixels = {};
+    let user = "{{username}}";
+    const cells = document.querySelectorAll('.cell');
+
+    for (i = 0; i < cells.length; i++) {
+      cells[i].id = "p" + i;
+      if (cells[i].style.backgroundColor == "black") {
+        pixels['p' + i] = cells[i].style.backgroundColor;
+      }
+    }
+    
+    const data = JSON.stringify(pixels);
+    const xhr = new XMLHttpRequest();
+
+    xhr.open("POST", "/canvas/"+user);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.send(data);
+  }
+
+  function load() {
+    let pixels = {};
+    let user = "{{username}}";
+    const cells = document.querySelectorAll('.cell');
+    for (i = 0; i < cells.length; i++) {
+      cells[i].id = "p" + i;                          // setting IDs for the cells
+    }
+    let data;
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "/canvas/"+user, true);        // making GET request
+    xhr.send();
+
+    xhr.onload = function () {
+      data = JSON.parse(xhr.responseText);
+      let keys = Object.keys(data);
+      for (let i = 0; i < keys.length; i++) {
+        let color = data[keys[i]];                // changing the color with the data received
+        document.getElementById(keys[i]).style.backgroundColor = color;
+      }
+    }
+  }
+</script>
+
+<body onload="load()">
     <section id="container_nav">
         <nav class="navbar">
             <ul class="navbar-nav">
-                <li><a href="http://127.0.0.1:5000/home">Home</a></li>
-                <li><a href="http://127.0.0.1:5000/logout">Logout ({{ g.user.username }})</a></li>
+               <li><a href="{{url_for('home')}}">Home</a></li>
+               {% if (g.user.username != '') %}
+               <li><a href="{{url_for('logout')}}">Logout ({{g.user.username}})</a></li>
+               {% else %}
+               <li><a href="{{url_for('register')}}">Signup</a></li>
+               <li><a href="{{url_for('login')}}">Login</a></li>
+               {% endif %}
             </ul>
         </nav>
      </section>
  
     <section id="container_canvas">
 
-        <h1>My Pixel Canvas</h1>
+        <h1>{{ username }}'s Pixel Canvas</h1>
         <table id="myCanvas">
 
         </table>
     </section>
+
     <button type="button" onclick="id_color_array()">save</button>
     
     <script type="text/javascript" src="{{ url_for('static', filename='profile.js') }}"></script>
