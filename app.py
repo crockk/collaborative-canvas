@@ -16,6 +16,10 @@ nav = Nav()
 
 app.secret_key = 'SuperSecretKeyForAgileProject'
 db = SqliteDatabase('pixr.sqlite')
+if not db.table_exists(User) or not db.table_exists(Pixels):
+    db.drop_tables([User, Cards, Pixels])
+    db.create_tables([User, Cards, Pixels])
+
 # init for managing logins
 login_manager = LoginManager()
 login_manager.init_app(app)
