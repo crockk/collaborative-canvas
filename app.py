@@ -181,7 +181,7 @@ def store_pixels(user):
 
     for pixel in data:
         try:
-            pixel = (Pixels.replace(user=user, pixel=pixel, color=data[pixel]).execute())
+            pixel = Pixels.insert(user=user, pixel=pixel, color=data[pixel]).execute()
         except IntegrityError as e:
             return make_response(str(e), 400)
     return make_response("Saved", 200)
