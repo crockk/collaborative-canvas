@@ -113,7 +113,7 @@ def profile():
         #return redirect(url_for('login', error="unauthorized"))
     # return make_response(render_template('profile.html'), 200)
     # return redirect(url_for('profile',username=g.user.username))
-    return render_template("profile.html", username=g.user.username.title())
+    return render_template("profile.html", username=g.user['username'].title())
 
 @app.route('/profile/<username>')
 #@login_required
@@ -194,7 +194,7 @@ def get_pixels(user):
     for i in data:
         dict[i.pixel] = i.color
 
-    return jsonify(dict)
+    return make_response(jsonify(dict))
 
 
 if __name__ == '__main__':

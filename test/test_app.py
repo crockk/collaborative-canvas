@@ -2,7 +2,7 @@ import unittest
 from app import app
 from drop_tables import drop
 from create_tables import create
-from database import User
+from database import User, Pixels
 from flask import jsonify
 
 t_app = app
@@ -56,6 +56,21 @@ class TestApi(unittest.TestCase):
             resp = c.post('/register', data=data3)
             self.assertEqual(resp.status_code, 400)
             resp = c.get('/register')
+            self.assertEqual(resp.status_code, 200)
+
+    def test_store_pixels(self):
+        data = {'pixel': 'black', 'pixel2': 'black'}
+        data2 = {'pixel': 'white', 'pixel2': None}
+        with t_app.test_client() as c:
+            resp = c.post('/canvas/test_user', json=data)
+            self.assertEqual(resp.status_code, 200)
+            resp = c.post('/canvas/test_user', json=data2)
+            self.assertEqual(resp.status_code, 400)
+
+    def test_get_pixels(self):
+        pixel = Pixels.insert(user_id='test', pixel='A011', color='black').execute()
+        with t_app.test_client() as c:
+            resp = c.get('/canvas/test')
             self.assertEqual(resp.status_code, 200)
 
 
