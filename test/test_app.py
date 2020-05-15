@@ -25,8 +25,9 @@ class TestApi(unittest.TestCase):
             self.assertEqual(resp.status_code, 200)
 
     def test_profile(self):
+        user = User.create(username='test', password='password')
         with t_app.test_client() as c:
-            resp = c.get('/profile')
+            resp = c.get('/profile/test')
             self.assertEqual(resp.status_code, 200)
 
     def test_login(self):

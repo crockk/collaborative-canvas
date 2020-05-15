@@ -113,7 +113,7 @@ def profile():
         #return redirect(url_for('login', error="unauthorized"))
     # return make_response(render_template('profile.html'), 200)
     # return redirect(url_for('profile',username=g.user.username))
-    return render_template("profile.html", username=g.user['username'].title())
+    return render_template("profile.html", username=g.user.username.title())
 
 @app.route('/profile/<username>')
 #@login_required
