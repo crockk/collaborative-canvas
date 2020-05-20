@@ -33,4 +33,10 @@ td{
   height: 20px;
 }
 
+#container_btns{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
 
+}
