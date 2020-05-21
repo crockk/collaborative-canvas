@@ -194,7 +194,7 @@ def get_pixels(user):
     for i in data:
         dict[i.pixel] = i.color
 
-    return jsonify(dict)
+    return make_response(jsonify(dict))
 
 
 if __name__ == '__main__':
