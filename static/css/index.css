@@ -1,9 +1,3 @@
-/* #myCanvas{
-    border: 1px solid black;
-    width: 50vw;
-    height: 50vh;
-} */
-
 #container_canvas{
   display: flex;
   flex-direction: column;
@@ -38,4 +32,11 @@ td{
   height: 20px;
 }
 
+#container_btns{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  color: white;
+}
 
