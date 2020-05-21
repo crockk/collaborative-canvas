@@ -19,7 +19,7 @@ class User(UserMixin, Model):
 class Pixels(Model):
     """ Peewee model for the canvas """
     user = ForeignKeyField(User)
-    pixel = CharField(unique=True)
+    pixel = CharField()
     color = CharField()
 
     class Meta:

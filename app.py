@@ -49,10 +49,12 @@ def get_db():
 @app.before_request
 def before_request():
     """ For sessions """
-    g.user = None
+    g.user = {}
     if 'user_id' in session:
         user = User.get(User.id == session['user_id'])
         g.user = user
+    else:
+        g.user['username'] = ''
 
 
 @app.teardown_request
@@ -96,7 +98,7 @@ def login():
                 print(loginUser.password)
                 session["user_id"] = User.get(User.username == username).id
                 login_user(loginUser)
-                return make_response(redirect(url_for('profile')), 400)
+                return make_response(redirect(url_for('profile',username=username)), 302)
         except ValueError:
             error = "Invalid password."
             return make_response(render_template('login.html', error=error), 400)
@@ -109,8 +111,14 @@ def profile():
     """ Displays User Profile """
     #if not g.user:  # Checks user stored in session (not sure this is actually needed anymore with login manager)
         #return redirect(url_for('login', error="unauthorized"))
-    return make_response(render_template('profile.html'), 200)
+    # return make_response(render_template('profile.html'), 200)
+    # return redirect(url_for('profile',username=g.user.username))
+    return render_template("profile.html", username=g.user.username.title())
 
+@app.route('/profile/<username>')
+#@login_required
+def userprofile(username):
+    return render_template("profile.html", username=username.title())
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -148,7 +156,7 @@ def register():
         newuser = User.create(username=username, password=hashed)
         session["user_id"] = User.get(User.username == newuser.username).id
         login_user(newuser)
-        return make_response(render_template('profile.html'), 200)
+        return make_response(redirect(url_for('profile',username=username)), 302)
     if request.method == 'GET':
         return make_response(render_template('register.html', error=error), 200)
 
@@ -158,7 +166,8 @@ def register():
 def logout():
     """ Logs user out when called """
     logout_user()
-    return make_response(redirect(url_for('login')), 200)
+    session.pop('user_id', None)  # reset session
+    return make_response(redirect(url_for('login')), 302)
 
 
 # ---------------------------------------- Main Canvas API ---------------------------------------------
@@ -167,10 +176,12 @@ def store_pixels(user):
     # Stores the pixel ids and their colors
     # JSON data structure = { pixel1 : color, pixel2 : color ...... }
     data = request.json
+    old_pixels = Pixels.delete().where(Pixels.user == user)
+    old_pixels.execute()
 
     for pixel in data:
         try:
-            pixel = (Pixels.replace(user=user, pixel=pixel, color=data[pixel]).execute())
+            pixel = Pixels.insert(user=user, pixel=pixel, color=data[pixel]).execute()
         except IntegrityError as e:
             return make_response(str(e), 400)
     return make_response("Saved", 200)
@@ -183,7 +194,7 @@ def get_pixels(user):
     for i in data:
         dict[i.pixel] = i.color
 
-    return jsonify(dict)
+    return make_response(jsonify(dict))
 
 
 if __name__ == '__main__':
