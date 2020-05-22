@@ -3,11 +3,10 @@ from flask_nav import Nav
 from flask_nav.elements import Navbar, View, Subgroup, Separator, Link
 from flask_bootstrap import Bootstrap
 from peewee import SqliteDatabase, IntegrityError
-from database import User, Cards, Pixels
+from database import User, Pixels
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import bcrypt  # for hashing
-import re
-import json
+import re # for regex
 
 
 app = Flask(__name__)
@@ -24,6 +23,7 @@ login_manager.login_view = 'login'
 
 @nav.navigation()
 def mynavbar():
+    """ Navigation bar with flask-bootstrap """
     if current_user.is_authenticated:
         return Navbar(
             'Menu',
@@ -66,11 +66,13 @@ def close_connection(exception):
 
 @app.route('/home', methods=['GET'])
 def home():
+    """ Route to project homepage """
     return make_response(render_template('index.html'), 200)
 
 
 @app.route('/', methods=['GET'])
 def default():
+    """ secondary route to homepage """
     return make_response(render_template('index.html'), 200)
 
 
@@ -106,18 +108,13 @@ def login():
         return make_response(render_template('login.html', error=''), 200)
 
 @app.route('/profile')
-#@login_required
 def profile():
     """ Displays User Profile """
-    #if not g.user:  # Checks user stored in session (not sure this is actually needed anymore with login manager)
-        #return redirect(url_for('login', error="unauthorized"))
-    # return make_response(render_template('profile.html'), 200)
-    # return redirect(url_for('profile',username=g.user.username))
     return render_template("profile.html", username=g.user.username.title())
 
 @app.route('/profile/<username>')
-#@login_required
 def userprofile(username):
+    """ Displays canvas for <username> """
     return render_template("profile.html", username=username.title())
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -173,6 +170,7 @@ def logout():
 # ---------------------------------------- Main Canvas API ---------------------------------------------
 @app.route('/canvas/<user>', methods=['POST'])
 def store_pixels(user):
+    """ Route for storing pixels to database """
     # Stores the pixel ids and their colors
     # JSON data structure = { pixel1 : color, pixel2 : color ...... }
     data = request.json
@@ -189,6 +187,7 @@ def store_pixels(user):
 
 @app.route('/canvas/<user>', methods=['GET'])
 def get_pixels(user):
+    """ Route for getting pixels for a particular user's database"""
     dict = {}
     data = Pixels.select().where(Pixels.user_id == user).execute()
     for i in data:
