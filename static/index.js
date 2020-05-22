@@ -1,3 +1,5 @@
+let curcolor = "black";
+
 $(document).ready(function(){
     let drawarea=document.getElementById("myCanvas");
     let rows=30;
@@ -18,7 +20,7 @@ $(document).ready(function(){
         if (!e.target.matches('td')) {
             return false;
         }
-        setCellColor(e.target, "black");
+        setCellColor(e.target, curcolor);
 
     });
 
@@ -28,6 +30,12 @@ $(document).ready(function(){
             return false;
         }
         setCellColor(e.target, "white");
+
+    });
+
+    document.getElementById("cpicker").addEventListener('change', e => {
+
+        curcolor = e.target.value;
 
     });
 
