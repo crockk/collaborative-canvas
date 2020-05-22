@@ -29,8 +29,8 @@ class Pixels(Model):
 
 
 if __name__ == "__main__":
-    db.drop_tables([User, Cards, Pixels])
-    db.create_tables([User, Cards, Pixels])
+    db.drop_tables([User, Pixels])
+    db.create_tables([User, Pixels])
     user = User.create(username='test', password='password')
     home = User.create(username='home', password='none')
 
