@@ -3,7 +3,7 @@ from flask_nav import Nav
 from flask_nav.elements import Navbar, View, Subgroup, Separator, Link
 from flask_bootstrap import Bootstrap
 from peewee import SqliteDatabase, IntegrityError
-from database import User, Cards, Pixels
+from database import User, Pixels
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import bcrypt  # for hashing
 import re # for regex
