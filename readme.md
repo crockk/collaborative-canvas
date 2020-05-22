@@ -9,14 +9,25 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install prerequ
 
 ```bash
 pip install -r requirements.txt
+
+OR
+
+manually pip install the following:
+  Flask
+  Flask_nav
+  Flask_bootstrap
+  Peewee
+  Flask_login
+  Bcrypt
+  re
 ```
 
 ## Usage
 
 ```python
-python database.py
+run python database.py to initialize the sqlite database file.
 
-python app.py
+run python app.py 
 ```
 
 ## Contributing
