@@ -29,6 +29,7 @@ run python database.py to initialize the sqlite database file.
 
 run python app.py 
 ```
+> Navigate to `localhost:5000` to access the application.
 
 ## Contributing
 We welcome pull requests. Please make sure updates pass tests.
